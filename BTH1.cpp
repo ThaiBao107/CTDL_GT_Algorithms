@@ -31,7 +31,14 @@ struct list
 
 typedef struct list LIST;
 
-void D(LIST &l)
+void DanhSach(LIST &l);
+NODE *KhoitaoNode(I thongtin, int x);
+void Them_vao_dau(LIST &l, NODE *p);
+void Them_Vao_Cuoi(LIST &l, NODE *p);
+void xuatDS(LIST l);
+void them_p_vaosau_q(LIST &l,NODE *p);
+void them_p_vaotruoc_q(LIST &l, NODE * p);
+void DanhSach(LIST &l)
 {
     l.pHead =NULL;
     l.pTail=NULL;
@@ -43,7 +50,7 @@ void D(LIST &l)
 NODE *KhoitaoNode(I thongtin, int x)
 {
     NODE * p = new NODE;
-    p->n =x;
+    p->n =  x;
     p->thong_tin.name = thongtin.name;
     p->thong_tin.code = thongtin.code;
     p->thong_tin.tuoi = thongtin.tuoi;
@@ -95,14 +102,15 @@ void xuatDS(LIST l)
 // ---------------------------------------------------------
 void them_p_vaosau_q(LIST &l,NODE *p)
 {
-    I t;
+    
+    I i;
     int x;
     cout<<"Nhap node q can them: ";
     cin >> x;
-    NODE* q = KhoitaoNode(t,x);
+    NODE * q = KhoitaoNode(i,x);
     int count =0;
     // chạy for trước để tìm nốt q cần thêm vào 
-    if( q->n == l.pHead->n && l.pHead == NULL)
+    if( q->n == l.pHead->n && l.pHead->link == NULL)
     {
         Them_Vao_Cuoi(l,p);
     }
@@ -110,9 +118,9 @@ void them_p_vaosau_q(LIST &l,NODE *p)
     {
     for(NODE *k = l.pHead;k!=NULL;k=k->link)
     {
-        if(q ->n == k->n)
+        if(q->n == k->n)
         {
-            NODE *h = KhoitaoNode(k->thong_tin,k->n);
+            NODE *h = KhoitaoNode(p->thong_tin,p->n);
             NODE *g = k->link;
             h->link = g;
             k->link = h;
@@ -126,23 +134,66 @@ void them_p_vaosau_q(LIST &l,NODE *p)
 }
 
 // ---------------------------------------------------------
+
+
+// them node p vao truoc node q
+//---------------------------------------------------------
+void them_p_vaotruoc_q(LIST &l, NODE * p)
+{
+    I i;
+    int x;
+    int count =0;
+    cout<<"Nhap node q: ";
+    cin >> x;
+    NODE *q =KhoitaoNode(i,x);
+    // kiem tra du lieu cua node q
+    if(q->n == l.pHead->n && l.pHead->link == NULL)
+    {
+        Them_vao_dau(l,p);
+    }
+    else
+    {
+        NODE *g = new NODE;
+        for(NODE *k = l.pHead;k!=NULL;k=k->link)
+        {
+            if(q->n == k->n)
+            {
+            NODE *h = KhoitaoNode(p->thong_tin,p->n); // sao chep du lieu tu p sang h
+            h->link = k;
+            g->link = h;
+            count++;
+            }
+        g=k; // update lai vi tri cua node truoc q
+        }   
+    }
+
+    if(count == 0)
+    {
+        cout<<"Khong co node q can them"<<endl;
+    }
+    else
+    {
+        cout<<"Them thanh cong"<<endl;
+    }
+}
+// --------------------------------------------------------
 int main()
 {
     LIST l;
-    D(l);
+    DanhSach(l);
     int n;
     do
     {
         cout<<"1. Tao 1 node"<<endl;
         cout<<"2. Xuat Danh sach"<<endl;
-        cout<<"3. Them vao dau"<<endl;
-        cout<<"4. Them vao p vao sau node q"<<endl;
-        cout<<"5. EXIT"<<endl;
+        cout<<"3. Them p vao truoc node q"<<endl;
+        cout<<"4. Them p vao sau node q"<<endl;
+        cout<<"5. EXIT"<<endl; 
         cout<<"Choose: "; 
         while(true)
         {
             cin>> n;
-            if(n > 0 && n<=4) break;
+            if(n > 0 && n<=5) break;
             else
                 cout<<"Nhap sai: ";
         }
@@ -168,6 +219,26 @@ int main()
                 // Ma code         NAME         Tuoi
                 xuatDS(l);
                 break;
+                }
+
+            case 3:
+                {
+                I thong_tin;
+                int n;
+                cout<<"Nhap node p: "; cin >> n;
+                cin.ignore();
+                cout<<"Nhap MSSV: "; getline(cin,thong_tin.code);
+                cout<<"Nhap name: "; getline(cin,thong_tin.name);
+                cout<<"Nhap tuoi: "; cin >> thong_tin.tuoi;
+                NODE *p = KhoitaoNode(thong_tin,n);
+                system("cls");
+                // ---------------------------------------------
+                them_p_vaotruoc_q(l,p);
+                cout<<"-> Nhan enter de xem KQ: ";
+                getch();
+                system("cls");
+                xuatDS(l);
+                break;
                 } 
 
             case 4:
@@ -186,7 +257,8 @@ int main()
                 cout<<"-> Nhan enter de xem KQ: ";
                 getch();
                 system("cls");
-                D(l);
+                xuatDS(l);
+                break;
             }
             case 5:
                 {
