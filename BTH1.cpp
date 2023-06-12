@@ -5,7 +5,7 @@
 #include <conio.h>
 
 using namespace std;
-
+int n=0;
 
 struct information{
     string name;
@@ -38,6 +38,9 @@ void Them_Vao_Cuoi(LIST &l, NODE *p);
 void xuatDS(LIST l);
 void them_p_vaosau_q(LIST &l,NODE *p);
 void them_p_vaotruoc_q(LIST &l, NODE * p);
+void them_vao_VT_batki(LIST &l, NODE *p, int vt);
+void xoa_dau(LIST &l);
+void xoa_cuoi(LIST &l);
 void DanhSach(LIST &l)
 {
     l.pHead =NULL;
@@ -177,28 +180,110 @@ void them_p_vaotruoc_q(LIST &l, NODE * p)
     }
 }
 // --------------------------------------------------------
+
+// them vao vi tri bat ki
+// --------------------------------------------------------
+void them_vao_VT_batki(LIST &l, NODE *p, int vt)
+{
+    if(l.pHead == NULL || vt == 1)
+    {
+        Them_vao_dau(l,p);
+    }
+    else if(vt == n+1)
+    {
+        Them_Vao_Cuoi(l,p);
+    }
+    else
+    {
+        NODE *g= new NODE;
+        int dem =0;
+        for(NODE *k=l.pHead; k!=NULL;k=k->link)
+        {
+            dem++;
+            if(dem == vt)
+            {
+                NODE *h = KhoitaoNode(p->thong_tin,p->n);
+                h->link = k;
+                g->link = h;
+                break;
+            }
+            g=k;
+        }
+    }
+
+}
+//-------------------------------------------------------- 
+
+// xoa dau danh sach
+// -------------------------------------------------------
+void xoa_dau(LIST &l)
+{
+    if(l.pHead == NULL) // chua co danh sach
+    {
+        return ;
+    }
+    else
+    {
+        NODE *p= l.pHead;
+        l.pHead = l.pHead->link;
+        delete p;
+    }
+}
+
+void xoa_cuoi(LIST &l)
+{
+    if(l.pHead == NULL)
+    {
+        return ;
+    }
+    else if(l.pHead->link == NULL)
+    {
+        xoa_dau(l);
+        return ;
+    }
+    else
+    {
+        for(NODE *k=l.pHead;k!=NULL;k=k->link)
+        {
+            if(k->link == l.pTail)
+            {
+                delete l.pTail;
+                k->link = NULL; // dua con tro sat cuoi bang NULL 
+                l.pTail = k;  // l.pTail luon la NULL khi o cuoi danh sach
+            }
+
+        }
+
+    }
+}
+// -------------------------------------------------------
+
+
 int main()
 {
     LIST l;
     DanhSach(l);
-    int n;
+    int m;
     do
     {
         cout<<"1. Tao 1 node"<<endl;
         cout<<"2. Xuat Danh sach"<<endl;
         cout<<"3. Them p vao truoc node q"<<endl;
         cout<<"4. Them p vao sau node q"<<endl;
-        cout<<"5. EXIT"<<endl; 
+        cout<<"5. Them vao vi tri bat ki"<<endl;
+        cout<<"6. Xoa dau danh sach"<<endl;
+        cout<<"7. Xoa cuoi danh sach"<<endl;
+        cout<<"8. EXIT"<<endl; 
         cout<<"Choose: "; 
         while(true)
         {
-            cin>> n;
-            if(n > 0 && n<=5) break;
+            cin>> m;
+            if(m > 0 && m<=8) break;
             else
                 cout<<"Nhap sai: ";
         }
         system("cls");
-        switch(n)
+        switch(m)
         {
             case 1:
                 {
@@ -260,7 +345,68 @@ int main()
                 xuatDS(l);
                 break;
             }
+
             case 5:
+            {
+                for(NODE *k=l.pHead; k!=NULL;k=k->link)
+                    n++;
+                
+                cout << n<<endl; 
+                I thong_tin;
+                int x;
+                int vt;
+                cout<<"Nhap node p: "; cin >> x;
+                cin.ignore();
+                cout<<"Nhap MSSV: "; getline(cin,thong_tin.code);
+                cout<<"Nhap name: "; getline(cin,thong_tin.name);
+                cout<<"Nhap tuoi: "; cin >> thong_tin.tuoi;
+                NODE *p = KhoitaoNode(thong_tin,x);
+                system("cls");
+                // ---------------------------------------------
+                cout<<"Nhap vao vi tri can them: ";
+
+                while(true)
+                {
+                    cin >> vt;
+                    if(vt > 0 && vt <= n+1) break;
+                    else
+                        cout<<"Nhap sai, hoat dong trong [1,"<<n+1<<"]: ";
+                }
+
+                them_vao_VT_batki(l,p,vt);
+                cout<<"Them vao thanh cong"<<endl;
+                cout<<"-> Nhan enter de xem KQ: "; 
+                getch();
+                system("cls");
+                // -------------------------------------
+                xuatDS(l);
+                break;
+            }
+            case 6:
+                {
+                    xoa_dau(l);
+                    cout<<"Xoa thanh cong"<<endl;
+                    cout<<"-> Nhan enter de xem KQ: ";
+                    getch();
+                    system("cls");
+                    // ----------------------------------------
+                    xuatDS(l);
+                    break;
+                }
+
+            case 7:
+                {
+                    xoa_cuoi(l);
+                    cout<<"Xoa thanh cong"<<endl;
+                    cout<<"-> Nhan enter de xem KQ: ";
+                    getch();
+                    system("cls");
+                    // ----------------------------------------
+                    xuatDS(l);
+                    break;
+                }
+                
+            case 8:
                 {
                 cout<<"Thoat: "<<endl;
                 for(NODE *k=l.pHead;k!=NULL;k=k->link)
@@ -273,7 +419,7 @@ int main()
         cout<<"-> Nhap enter de tro ve man hinh chinh: ";
         getch();
         system("cls");
-    } while (true);
+    } while(true);
     
     return 0;
 }
