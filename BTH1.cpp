@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iomanip>
 #include <conio.h>
-
 using namespace std;
 int n=0;
 
@@ -41,6 +40,8 @@ void them_p_vaotruoc_q(LIST &l, NODE * p);
 void them_vao_VT_batki(LIST &l, NODE *p, int vt);
 void xoa_dau(LIST &l);
 void xoa_cuoi(LIST &l);
+
+void xoa_p_sau_node_q(LIST &l, NODE *p);
 void DanhSach(LIST &l)
 {
     l.pHead =NULL;
@@ -259,6 +260,22 @@ void xoa_cuoi(LIST &l)
 // -------------------------------------------------------
 
 
+// xoa node p sau node q
+// --------------------------------------------------------
+void xoa_p_sau_node_q(LIST &l, NODE *p)
+{
+    for(NODE *k=l.pHead;k!=NULL;k=k->link)
+    {
+        if(p->n == k->n)
+        {
+            NODE *g=k->link;
+            k->link = g->link;
+            delete g;
+        }
+    }
+}
+// --------------------------------------------------------
+
 int main()
 {
     LIST l;
@@ -273,12 +290,13 @@ int main()
         cout<<"5. Them vao vi tri bat ki"<<endl;
         cout<<"6. Xoa dau danh sach"<<endl;
         cout<<"7. Xoa cuoi danh sach"<<endl;
-        cout<<"8. EXIT"<<endl; 
+        cout<<"8. Xoa node p nam sau node q"<<endl;
+        cout<<"9. EXIT"<<endl; 
         cout<<"Choose: "; 
         while(true)
         {
             cin>> m;
-            if(m > 0 && m<=8) break;
+            if(m > 0 && m<=9) break;
             else
                 cout<<"Nhap sai: ";
         }
@@ -405,8 +423,25 @@ int main()
                     xuatDS(l);
                     break;
                 }
-                
+            
             case 8:
+                {
+                    I i;
+                    int x;
+                    cout<<"Nhap node q can xoa sau node p: "; 
+                    cin >>x;
+                    NODE * q = KhoitaoNode(i,x);
+                    xoa_p_sau_node_q(l,q);
+                    cout<<"Xoa Thanh cong"<<endl;
+                    cout<<"-> Nhan enter de xem KQ: ";
+                    getch();
+                    system("cls");
+                    // --------------------------------------------
+                    xuatDS(l);
+                    break;
+                }
+                
+            case 9:
                 {
                 cout<<"Thoat: "<<endl;
                 for(NODE *k=l.pHead;k!=NULL;k=k->link)
