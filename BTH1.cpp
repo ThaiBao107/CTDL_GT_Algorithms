@@ -260,7 +260,7 @@ void xoa_cuoi(LIST &l)
 // -------------------------------------------------------
 
 
-// xoa node p sau node q
+// xoa node p sau node qs
 // --------------------------------------------------------
 void xoa_p_sau_node_q(LIST &l, NODE *p)
 {
@@ -444,9 +444,12 @@ int main()
             case 9:
                 {
                 cout<<"Thoat: "<<endl;
-                for(NODE *k=l.pHead;k!=NULL;k=k->link)
+                NODE *g;
+                while(l.pHead != NULL)
                 {
-                    delete k;
+                    g->link = l.pHead;
+                    l.pHead = l.pHead -> link;
+                    delete g;
                 }
                 return 0;
                 }      
