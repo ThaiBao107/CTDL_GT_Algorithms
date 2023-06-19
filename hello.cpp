@@ -4,6 +4,9 @@
 
 int main()
 {
-    cout<<"Hello world"<<endl;
+    while(true)
+    {
+        cout<<"Happy birthday for me"<<endl;
+    }
     return 0;
 }

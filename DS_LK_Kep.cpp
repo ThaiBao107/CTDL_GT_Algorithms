@@ -35,6 +35,11 @@ void giai_phong(LIST& l);
 void add_node_p_vaosau_node_q(LIST& l, NODE* p);
 void init_LIST(LIST& l);
 void show_LIST(LIST l);
+void delete_first(LIST& l);
+void delete_last(LIST& l);
+void show_last(LIST l);
+void delete_node_p_after_node_q(LIST& l);
+void delete_vt_bk(LIST& l, NODE* vt);
 int n = 0;
 
 void add_fisrt(LIST& l, NODE* p)
@@ -179,6 +184,129 @@ void them_nodep_vao_vt_batky(LIST& l, NODE *p, int vt)
 	}
 }
 
+void delete_first(LIST& l)
+{
+	if (l.pHead == NULL) return;  // danh sach rong
+	else if (l.pHead->link == NULL)   // danh sach chi co mot phan tu 
+	{
+		NODE* g = l.pHead;
+		l.pHead = l.pTail = NULL;
+		delete g;
+	}
+	else
+	{
+		NODE* g = l.pHead;
+		l.pHead = l.pHead->link;
+		l.pHead->previous = NULL;
+		delete g;
+	}
+}
+//---------------------------------------------------
+// xoa cuoi
+//---------------------------------------------------
+void delete_last(LIST& l)
+{
+	if (l.pHead == NULL) return;
+	else if (l.pHead->link == NULL)
+		delete_first(l);
+	else
+	{
+		NODE* p = l.pTail;
+		l.pTail = l.pTail->previous;
+		l.pTail->link = NULL;
+		delete p;
+	}
+}
+//---------------------------------------------------
+
+void show_last(LIST l)
+{
+	int i = 0;
+	for (NODE* k = l.pTail; k != NULL; k = k->previous)
+	{
+		cout << "Node thu " << i + 1 << endl;
+		cout << k->value << endl;
+		i++;
+	}
+}
+
+// xoa node p sau node q 
+//-----------------------------------------------------
+void delete_node_p_after_node_q(LIST& l)      // can coi lai
+{
+	int x;
+	cout << "Nhap node q can xoa sau: ";
+	cin >> x;
+	NODE* q = init_NODE(x);
+	if (l.pHead == NULL) // chua co danh sach
+	{
+		cout << "Chua co danh sach khong the xoa dc" << endl;
+		return;
+	}
+	else if (l.pHead->link == NULL && q->value == 1)  // danh sach chi co mot phan tu
+	{
+		delete_first(l);
+		return;
+	}
+	else
+	{
+		for (NODE* k = l.pHead; k != NULL; k = k->link)
+		{
+			if (q->value == k->value)
+			{
+				NODE* h = k->link;
+				k->link = h->link;
+				if (k->link == NULL)
+				{
+					l.pTail = k;
+					delete h;
+					return;
+				}
+				k->link->previous = h->previous;
+				delete h;
+			}
+		}
+	}
+}
+//-----------------------------------------------------
+// xoa node do nguoi dung nhap
+//-----------------------------------------------------
+void delete_vt_bk(LIST& l, int vt)
+{
+	if (l.pHead == NULL)
+	{
+		cout << "Chua co danh sach khong the xoa" << endl;
+		return;
+	}
+	else if (l.pHead->value == vt)
+	{
+		delete_first(l);
+		return;
+	}
+	else if (l.pTail->value == vt)
+	{
+		delete_last(l);
+		return;
+	}
+	else
+	{
+		NODE* g = new NODE;
+		for (NODE* k = l.pHead; k != NULL; k = k->link)
+		{
+			if (k->value == vt)
+			{
+				g->link = k->link;
+				k->link->previous = g;
+				delete k;
+				return;
+			}
+			g = k;
+		}
+	}
+	n = 0;
+}
+//-----------------------------------------------------
+
 
 int main()
 {
@@ -195,13 +323,17 @@ int main()
 		cout << "5. Them node p vao sau node q                  " << endl;
 		cout << "6. Them node p vao truoc node q                " << endl;
 		cout << "7. Them node p vao vi tri bat ki               " << endl;
-		cout << "8. EXIT                                        " << endl;
+		cout << "8. Xoa dau danh sach lien kep                   " << endl;
+		cout << "9. Xoa cuoi danh sach                         " << endl;
+		cout << "10. Xoa node p sau node q                       " << endl;
+		cout << "11. Xoa vi tri do nguoi dung nhap               " << endl;
+		cout << "12. EXIT                                        " << endl;
 		cout << "-----------------------------------------------" << endl;
 		cout << "Choose: ";
 		while (true)
 		{
 			cin >> choose;
-			if (choose > 0 && choose <= 8) break;
+			if (choose > 0 && choose <= 12) break;
 			else
 				cout << "Nhap sai, nhap lai: ";
 		}
@@ -282,8 +414,52 @@ int main()
 			n = 0;
 			break;
 		}
-
 		case 8:
+		{
+			delete_first(l);
+			cout << "Xoa thanh cong" << endl;
+			system("pause");
+			system("cls");
+			show_LIST(l);
+			break;
+		}
+		case 9:
+		{
+			delete_last(l);
+			cout << "Xoa thanh cong" << endl;
+			system("pause");
+			system("cls");
+			show_last(l);
+			break;
+		}
+		case 10:
+		{
+			delete_node_p_after_node_q(l);
+			cout << "Xoa thanh cong" << endl;
+			system("pause");
+			system("cls");
+			show_last(l);
+			break;
+		}
+		case 11:
+		{
+			for (NODE* k = l.pHead; k != NULL; k = k->link) n++;
+			int x;
+			cout << "Nhap vi tri can xoa trong khoang [1," << n<<"]: ";
+			while (true)
+			{
+				cin >> x;
+				if (x > 0 && x <= n) break;
+				else
+					cout << "Vi tri nhap sai hoac khong co vi tri do, nhap lai: ";
+			}
+			delete_vt_bk(l, x);
+			system("pause");
+			system("cls");
+			show_last(l);
+			break;
+		}
+		case 12:
 		{
 			if (l.pHead == NULL) return 0;
 			else
