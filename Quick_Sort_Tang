@@ -1,0 +1,120 @@
+#include<iostream>
+using namespace std;
+#define MAX 100
+
+void nhap_mang(int a[], int& n)
+{
+	cout << "Nhap so luong phan tu: ";
+	while (true)
+	{
+		cin >> n;
+		if (n > 0 && n < 100) break;
+		else
+			cout << "Nhap sai, nhap lai: ";
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << "Nhap so thu " << i + 1 << ": ";
+		cin >> a[i];
+	}
+	cout << "nhap mang thanh cong" << endl;
+}
+
+void xuat_mang(int a[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << "Phan tu thu " << i + 1 << ": " << a[i] << endl;
+	}
+}
+
+void swap(int& a, int& b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
+void Quick_sort(int a[], int left, int right)
+{
+	int mid = a[(left + right) / 2];
+	int i = left;	
+	int j = right;
+	while (i < j)
+	{
+		while (a[i] < mid) i++;
+		while (a[j]>mid) j--;
+		if (i <= j)	
+		{
+			swap(a[i], a[j]);
+			i++;
+			j--;	
+		}
+	}
+	if (left < j)
+		Quick_sort(a, left, j);
+	if (i < right)
+		Quick_sort(a, i, right);
+}
+
+int main()
+{
+	int a[MAX];
+	int n = 0;
+	int choose;
+	do
+	{
+		cout << "---------------------------MENU---------------------------" << endl;
+		cout << "1. Nhap mang                                               " << endl;
+		cout << "2. Xuat mang                                               " << endl;
+		cout << "3. Sap xep                                                  " << endl;
+		cout << "4. EXIT                                                      " << endl;
+		cout << "-----------------------------------------------------------" << endl;
+		cout << "Choose: ";
+		while (true)
+		{
+			cin >> choose;
+			if (choose > 0 && choose <= 4)break;
+			else
+				cout << "Nhap sai, nhap lai: ";
+		}
+		system("cls");
+		switch (choose)
+		{
+		case 1:
+		{
+			nhap_mang(a, n);
+			break;
+		}
+		case 2:
+		{
+			if (n == 0) cout << "Chua co danh sach" << endl;
+			else
+			{
+				xuat_mang(a, n);
+			}
+			break;
+		}
+		case 3:
+		{
+			if (n == 0) cout <<"Chua co danh sach" << endl;
+			else
+			{
+				int left = 0;
+				int right = n - 1;
+				Quick_sort(a, left, right);
+				system("pause");
+				system("cls");
+				xuat_mang(a, n);
+			}
+			break;
+		}
+		case 4:
+		{
+			return 0;
+		}
+		}
+		system("pause");
+		system("cls");
+	} while (true);
+}
